@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="nonogram" default="nonogram.jar" basedir="." >
+
+  <property name="build.dir" value="build" />
+  <property name="src.dir"   value="src" />
+  <property name="lib.dir"   value="lib" />
+  <property name="doc.dir"   value="doc" />
+
+  <target name="nonogram.jar" depends="compile.nonogram">
+    <jar jarfile="nonogram.jar">
+      <zipfileset dir="${build.dir}" prefix="" />
+      <zipgroupfileset dir="lib" includes="*.jar"/>
+      <manifest>
+        <attribute name="Main-Class" value="nonogram.Solver"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="compile.nonogram">
+    <mkdir dir="${build.dir}"/>
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           debug="true"
+           debuglevel="lines,vars,source"
+           includeantruntime="false"
+           deprecation="true"
+           nowarn="off">
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <compilerarg value="-Xlint:unchecked"/>
+    </javac>
+  </target>
+
+  <target name="doc" depends="nonogram.jar">
+    <mkdir dir="${doc.dir}"/>
+    <javadoc packagenames="nonogram.*"
+             sourcepath="src"
+             defaultexcludes="yes"
+             destdir="${doc.dir}"
+             charset="UTF-8"
+             author="false"
+             version="false"
+             use="true"
+             windowtitle="Traveling Salesman Problem">
+      <doctitle><![CDATA[<h1>Traveling Salesman Problem</h1>]]></doctitle>
+      <link href="http://docs.oracle.com/javase/8/docs/api/" />
+      <link href="http://docs.oracle.com/javafx/2/api/" />
+      <classpath>
+        <pathelement location="${lib.dir}/junit.jar" />
+        <pathelement location="${lib.dir}/hamcrest-core.jar" />
+	<pathelement location="${lib.dir}/sqlite-jdbc-3.16.1.jar" />
+      </classpath>
+    </javadoc>
+  </target>
+
+  <target name="clean">
+    <delete file="nonogram.jar"/>
+    <delete file="/src/nonogram/*~"/>
+    <delete file="/src/nonogram/test/*~"/> 
+    <delete dir="${build.dir}"/>
+    <delete dir="${doc.dir}"/>
+  </target>
+
+  <target name="test" depends="nonogram.jar">
+    <junit printsummary="yes" haltonfailure="no" showoutput="yes">
+      <formatter type="plain" usefile="false" />
+      <classpath>
+        <pathelement path="${build.dir}" />
+        <pathelement location="${lib.dir}/junit.jar" />
+        <pathelement location="${lib.dir}/hamcrest-core.jar" />
+	<pathelement location="${lib.dir}/sqlite-jdbc-3.16.1.jar" />
+      </classpath>
+      <batchtest fork="yes">
+        <fileset dir="${src.dir}">
+          <include name="**/*Test*.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+</project>
