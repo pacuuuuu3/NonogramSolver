@@ -18,13 +18,16 @@ public class TestNonograma{
     /** Expiración para que ninguna prueba tarde más de 5 segundos. */
     @Rule public Timeout expiracion = Timeout.seconds(5);
 
-    private Nonograma n;
+    private Nonograma n, n2;
 
     /**
      * Construímos un Nonograma */
     public TestNonograma(){
 	int[][] resF = {{1, -1}, {1, -1}};
       	n = new Nonograma(2, 2, resF, resF);
+	int[][] resF2 ={{1, 1}, {2}, {0}};
+	int[][] resC2 = {{2},{1},{1}};
+	n2 = new Nonograma(3, 3, resF2, resC2);
     }
 
     /**
@@ -37,6 +40,16 @@ public class TestNonograma{
 	n.colorea(1, 1);
 	Assert.assertTrue(n.filaValida(0));
 	Assert.assertTrue(n.filaValida(1));
+	Assert.assertFalse(n2.filaValida(0));
+	Assert.assertFalse(n2.filaValida(1));
+	Assert.assertTrue(n2.filaValida(2));
+	n2.colorea(0, 0);
+	n2.colorea(0, 2);
+	n2.colorea(1, 0);
+	n2.colorea(1, 1);
+	Assert.assertTrue(n2.filaValida(0));
+	Assert.assertTrue(n2.filaValida(1));
+	Assert.assertTrue(n2.filaValida(2));
     }
     
     /**

@@ -59,6 +59,8 @@ public class Nonograma{
 	} 
 	int actual = 0; /* Columna actual sobre la que verificamos las restricciones */
 	for(int j = 0; j < columnas; ++j){
+	    if(j >= restriccionesF[i].length)
+		break;
 	    int res = restriccionesF[i][j]; /* Leemos la siguiente restricción */
 	    if(res <= 0)
 		break;
