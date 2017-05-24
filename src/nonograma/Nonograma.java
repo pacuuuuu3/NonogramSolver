@@ -42,13 +42,11 @@ public class Nonograma{
 		return false;
 	return true;
     }
-
-    public boolean columnaValida(int c){
-	return true;
-    }
-
+    
     /**
      * Nos dice si una fila es válida de acuerdo a sus restricciones.
+     * @param i - El número de fila que queremos verificar
+     * @return Si la fila es válida de acuerdo a las restricciones
      */
     public boolean filaValida(int i){
 	if(restriccionesF[i][0] == 0){
@@ -62,8 +60,6 @@ public class Nonograma{
 	    if(j >= restriccionesF[i].length)
 		break;
 	    int res = restriccionesF[i][j]; /* Leemos la siguiente restricción */
-	    if(res <= 0)
-		break;
 	    while(actual < columnas && !colores[i][actual]) /* Vamos hasta el siguiente negro */
 		actual++;
 	    if(actual == columnas)
@@ -80,6 +76,40 @@ public class Nonograma{
 	    return false;
 	return true;
     }
+
+    /**
+     * Nos dice si una columna es válida de acuerdo a sus restricciones.
+     */
+    public boolean columnaValida(int j){
+	if(restriccionesC[j][0] == 0){
+	    for(int k = 0; k < filas; k++)
+		if(colores[k][j])
+		    return false;
+	    return true;
+	}
+	int actual = 0; /* Fila actual sobre la que verificamos las restricciones */
+	for(int i = 0; i < filas; ++i){
+	    if(i >= restriccionesC[j].length)
+		break;
+	    int res = restriccionesC[j][i]; /* Leemos la siguiente restricción */
+	    while(actual < filas && !colores[actual][j]) /* Vamos hasta el siguiente negro */
+		actual++;
+	    if(actual == filas)
+		return false;
+	    for(int k = 0; k < res; ++k)
+		if(actual+k > filas || !colores[actual+k][j])
+		    return false;
+	    actual = actual + res;
+	    if(actual < filas && colores[actual][j])
+		return false;
+	}
+	while(actual < filas && !colores[actual++][j]);
+	if(actual != columnas)
+	    return false;
+	return true;
+    }
+
+    
 
     /**
      * Cambia el color de la coordenada (fila, columna)

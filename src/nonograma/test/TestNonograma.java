@@ -23,7 +23,7 @@ public class TestNonograma{
     /**
      * Construímos un Nonograma */
     public TestNonograma(){
-	int[][] resF = {{1, -1}, {1, -1}};
+	int[][] resF = {{1}, {1}};
       	n = new Nonograma(2, 2, resF, resF);
 	int[][] resF2 ={{1, 1}, {2}, {0}};
 	int[][] resC2 = {{2},{1},{1}};
@@ -50,6 +50,33 @@ public class TestNonograma{
 	Assert.assertTrue(n2.filaValida(0));
 	Assert.assertTrue(n2.filaValida(1));
 	Assert.assertTrue(n2.filaValida(2));
+    }
+
+    /**
+     * Prueba unitaria para {@link Nonograma#columnaValida}.
+     */
+    @Test public void testColumnaValida(){
+	int[][] resF = {{1}, {1}};
+      	n = new Nonograma(2, 2, resF, resF);
+	Assert.assertFalse(n.columnaValida(0));
+	Assert.assertFalse(n.columnaValida(1));
+	n.colorea(0, 0);
+	n.colorea(1, 1);
+	Assert.assertTrue(n.columnaValida(0));
+	Assert.assertTrue(n.columnaValida(1));
+	int[][] resF2 ={{1, 1}, {2}, {0}};
+	int[][] resC2 = {{2},{1},{1}};
+	n2 = new Nonograma(3, 3, resF2, resC2);
+	Assert.assertFalse(n2.columnaValida(0));
+	Assert.assertFalse(n2.columnaValida(1));
+	Assert.assertFalse(n2.columnaValida(2));
+	n2.colorea(0, 0);
+	n2.colorea(0, 2);
+	n2.colorea(1, 0);
+	n2.colorea(1, 1);
+	Assert.assertTrue(n2.columnaValida(0));
+	Assert.assertTrue(n2.columnaValida(1));
+	Assert.assertTrue(n2.columnaValida(2));
     }
     
     /**
