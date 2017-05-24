@@ -70,6 +70,8 @@ public class Nonograma{
 		if(actual+k > columnas || !colores[i][actual+k])
 		    return false;
 	    actual = actual + res;
+	    if(actual < columnas && colores[i][actual])
+		return false;
 	}
 	while(actual < columnas && !colores[i][actual++]);
 	if(actual != columnas)
