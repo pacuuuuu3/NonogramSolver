@@ -29,6 +29,37 @@ public class Nonograma{
 	this.colores = new boolean[filas][columnas];
     }
 
+    /** 
+     * Regresa una cadena que representa al Nonograma.
+     * @return Cadena que representa al Nonograma.
+     */
+    @Override
+    public String toString(){
+       	String regreso = ""; /* Cadena a regresar */
+	regreso += "Tamaño: " + filas + " * " + columnas + "\n";
+	regreso += "Restricciones de filas: \n";
+	for(int i = 0; i < restriccionesF.length; ++i){
+	    for(int j = 0; j < restriccionesF[i].length; ++j)
+		regreso += restriccionesF[i][j] + " ";
+	    regreso += "\n"; 
+	}	
+	regreso += "Restricciones de columnas: \n";
+	for(int i = 0; i < restriccionesC.length; ++i){
+	    for(int j = 0; j < restriccionesC[i].length; ++j)
+		regreso += restriccionesC[i][j] + " ";
+	    regreso += "\n"; 
+	}	
+	for(int i = 0; i < colores.length; ++i){
+	    for(int j = 0; j < colores[i].length; ++j)
+		if(colores[i][j])
+		    regreso += "|#|";
+		else
+		    regreso += "| |";
+	    regreso += "\n";
+	}
+	return regreso;
+    }
+    
     /**
      * Nos dice si la solución dada a un nonograma es válida.
      * @return Si la solución es válida o no.
@@ -79,6 +110,8 @@ public class Nonograma{
 
     /**
      * Nos dice si una columna es válida de acuerdo a sus restricciones.
+     * @param j - El número de columna a verificar
+     * @return Si la columna es válida de acuerdo a las restricciones
      */
     public boolean columnaValida(int j){
 	if(restriccionesC[j][0] == 0){

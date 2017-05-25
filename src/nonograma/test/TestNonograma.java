@@ -29,7 +29,7 @@ public class TestNonograma{
 	int[][] resC2 = {{2},{1},{1}};
 	n2 = new Nonograma(3, 3, resF2, resC2);
     }
-
+   
     /**
      * Prueba unitaria para {@link Nonograma#filaValida}.
      */
@@ -83,5 +83,20 @@ public class TestNonograma{
      * Prueba unitaria para {@link Nonograma#solucionValida}.
      */
     @Test public void testSolucionValida(){
+	int[][] resF = {{1}, {1}};
+	n = new Nonograma(2, 2, resF, resF);
+	n.colorea(0, 0);
+	n.colorea(1, 1);
+	Assert.assertTrue(n.solucionValida());
+	int[][] resF2 ={{1, 1}, {2}, {0}};
+	int[][] resC2 = {{2},{1},{1}};
+	n2 = new Nonograma(3, 3, resF2, resC2);
+       	n2.colorea(0, 0);
+	n2.colorea(0, 2);
+	n2.colorea(1, 0);
+	n2.colorea(1, 1);
+	Assert.assertTrue(n2.solucionValida());
+	System.out.println(n);
+	System.out.println(n2);
     }
 }
