@@ -159,7 +159,7 @@ public class Nonograma{
 
     /**
      * Calcula la aptitud de un Nonograma.
-     * aptitud = (1-errores)/casillas
+     * aptitud = 1-(errores/casillas)
      * @return La aptitud del nonograma para utilizar una heurística de resolución.
      */
     public double getAptitud(){
@@ -168,7 +168,7 @@ public class Nonograma{
 	    errores += erroresFila(i);
 	for(int j = 0; j < columnas; ++j)
 	    errores += erroresColumna(j);
-	return (1 - errores)/(filas*columnas);
+	return 1 - (errores/filas*columnas);
     }    
 
     /**

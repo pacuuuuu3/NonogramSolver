@@ -75,7 +75,7 @@ public class TestNonograma{
     }
 
     /**
-     * Prueba unitaria para {@link Nonograma#erroresFila}.
+     * Prueba unitaria para {@link Nonograma#erroresColumna}.
      */
     @Test public void testErroresColumna(){
 	Assert.assertTrue(n.erroresColumna(0) == 1);
@@ -96,6 +96,24 @@ public class TestNonograma{
 	Assert.assertTrue(n2.erroresColumna(2) == 0);
     }
 
+    /**
+     * Prueba unitaria para {@link Nonograma#getAptitud}.
+     */
+    @Test public void testGetAptitud(){
+	int[][] resF = {{1, 1}, {2}, {2}};
+	int[][] resC = {{2}, {2}, {1, 1}};
+	n = new Nonograma(3, 3, resF, resC);
+	n.colorea(0, 0);
+	n.colorea(1, 0);
+	n.colorea(1, 1);
+	n.colorea(2, 2);
+	Assert.assertTrue(n.getAptitud() == 1 - (4/9));
+	n.colorea(2, 1);
+	n.colorea(2, 0);
+	Assert.assertTrue(n.getAptitud() == 1);
+    }
+
+    
     /**
      * Prueba unitaria para {@link Nonograma#columnaValida}.
      */
