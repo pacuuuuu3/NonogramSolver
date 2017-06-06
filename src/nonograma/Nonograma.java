@@ -2,6 +2,8 @@
 package nonograma;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Modelo de un nonograma.
@@ -54,7 +56,7 @@ public class Nonograma{
 		if(colores[i][j])
 		    regreso += "|#|";
 		else
-		    regreso += "| |";
+		    regreso += "|_|";
 	    regreso += "\n";
 	}
 	return regreso;
@@ -73,39 +75,109 @@ public class Nonograma{
 		return false;
 	return true;
     }
-    
+
+    /**
+     * Saca el número de errores en una fila. 
+     * @param fila - El número de fila de la cuál veremos los errores
+     * @return El número de errores en la fila 'fila'
+     */
+    public int erroresFila(int fila){
+	List<Integer> listaFila = new ArrayList<>(); /* Lista que representa los 
+						     * valores de color de la fila. */ 
+	int actual = 0; /* Valor de color actual en la fila */
+	for(int j = 0; j < columnas; ++j)
+	    if(colores[fila][j])
+		actual++;
+	    else if(actual > 0){
+		listaFila.add(actual);
+		actual = 0;
+	    }
+	if(actual != 0)
+	    listaFila.add(actual);
+ 	if(listaFila.size() == 0){
+	    int suma = 0;
+	    for(int i: restriccionesF[fila])
+		suma += i;
+	    return suma;
+	}
+	int min = Integer.MAX_VALUE; /* Mínima distancia entre nuestra solución 
+				      * y la solución esperada */
+	for(int j = restriccionesF[fila].length; j > -(listaFila.size()); --j){
+	    int distancia = 0; /* Distancia entre la solución recorrida j lugares
+				* y las restricciones. */
+	    for(int i = 0; i < listaFila.size(); i++){
+		int indice = i+j; /* El índice de restricción a sacar */
+		int restriccion = (indice >= restriccionesF[fila].length || indice < 0) ? 0 : restriccionesF[fila][indice]; 
+		distancia += Math.abs(listaFila.get(i)-restriccion);
+	    }
+	    if(distancia < min)
+		min = distancia;
+	}
+	return min;
+    }
+
+    /**
+     * Saca los errores en la columna dada 
+     * @param columna - El número de columna de la cuál veremos los errores
+     * @return El número de errores en la columna 'columna'
+     */
+    public int erroresColumna(int columna){
+	List<Integer> listaColumna = new ArrayList<>(); /* Lista que representa los 
+							 * valores de color de la columna. */ 
+	int actual = 0; /* Valor de color actual en la columna */
+	for(int j = 0; j < filas; ++j)
+	    if(colores[j][columna])
+		actual++;
+	    else if(actual > 0){
+		listaColumna.add(actual);
+		actual = 0;
+	    }
+	if(actual != 0)
+	    listaColumna.add(actual);
+ 	if(listaColumna.size() == 0){
+	    int suma = 0;
+	    for(int i: restriccionesC[columna])
+		suma += i;
+	    return suma;
+	}
+	int min = Integer.MAX_VALUE; /* Mínima distancia entre nuestra solución 
+				      * y la solución esperada */
+	for(int j = restriccionesC[columna].length; j > -(listaColumna.size()); --j){
+	    int distancia = 0; /* Distancia entre la solución recorrida j lugares
+				* y las restricciones. */
+	    for(int i = 0; i < listaColumna.size(); i++){
+		int indice = i+j; /* El índice de restricción a sacar */
+		int restriccion = (indice >= restriccionesC[columna].length || indice < 0) ? 0 : restriccionesC[columna][indice]; 
+		distancia += Math.abs(listaColumna.get(i)-restriccion);
+	    }
+	    if(distancia < min)
+		min = distancia;
+	}
+	return min;
+    }
+
+
+    /**
+     * Calcula la aptitud de un Nonograma.
+     * aptitud = (1-errores)/casillas
+     * @return La aptitud del nonograma para utilizar una heurística de resolución.
+     */
+    public double getAptitud(){
+	int errores = 0; /* Número de errores en el nonograma */
+	for(int i = 0; i < filas; ++i)
+	    errores += erroresFila(i);
+	for(int j = 0; j < columnas; ++j)
+	    errores += erroresColumna(j);
+	return (1 - errores)/(filas*columnas);
+    }    
+
     /**
      * Nos dice si una fila es válida de acuerdo a sus restricciones.
      * @param i - El número de fila que queremos verificar
      * @return Si la fila es válida de acuerdo a las restricciones
      */
     public boolean filaValida(int i){
-	if(restriccionesF[i][0] == 0){
-	    for(int k = 0; k < columnas; k++)
-		if(colores[i][k])
-		    return false;
-	    return true;
-	} 
-	int actual = 0; /* Columna actual sobre la que verificamos las restricciones */
-	for(int j = 0; j < columnas; ++j){
-	    if(j >= restriccionesF[i].length)
-		break;
-	    int res = restriccionesF[i][j]; /* Leemos la siguiente restricción */
-	    while(actual < columnas && !colores[i][actual]) /* Vamos hasta el siguiente negro */
-		actual++;
-	    if(actual == columnas)
-		return false;
-	    for(int k = 0; k < res; ++k)
-		if(actual+k > columnas || !colores[i][actual+k])
-		    return false;
-	    actual = actual + res;
-	    if(actual < columnas && colores[i][actual])
-		return false;
-	}
-	while(actual < columnas && !colores[i][actual++]);
-	if(actual != columnas)
-	    return false;
-	return true;
+	return erroresFila(i) == 0;
     }
 
     /**
@@ -114,35 +186,8 @@ public class Nonograma{
      * @return Si la columna es válida de acuerdo a las restricciones
      */
     public boolean columnaValida(int j){
-	if(restriccionesC[j][0] == 0){
-	    for(int k = 0; k < filas; k++)
-		if(colores[k][j])
-		    return false;
-	    return true;
-	}
-	int actual = 0; /* Fila actual sobre la que verificamos las restricciones */
-	for(int i = 0; i < filas; ++i){
-	    if(i >= restriccionesC[j].length)
-		break;
-	    int res = restriccionesC[j][i]; /* Leemos la siguiente restricción */
-	    while(actual < filas && !colores[actual][j]) /* Vamos hasta el siguiente negro */
-		actual++;
-	    if(actual == filas)
-		return false;
-	    for(int k = 0; k < res; ++k)
-		if(actual+k > filas || !colores[actual+k][j])
-		    return false;
-	    actual = actual + res;
-	    if(actual < filas && colores[actual][j])
-		return false;
-	}
-	while(actual < filas && !colores[actual++][j]);
-	if(actual != columnas)
-	    return false;
-	return true;
-    }
-
-    
+	return erroresColumna(j) == 0;
+    }    
 
     /**
      * Cambia el color de la coordenada (fila, columna)

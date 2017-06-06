@@ -29,7 +29,7 @@ public class TestNonograma{
 	int[][] resC2 = {{2},{1},{1}};
 	n2 = new Nonograma(3, 3, resF2, resC2);
     }
-   
+    
     /**
      * Prueba unitaria para {@link Nonograma#filaValida}.
      */
@@ -50,6 +50,50 @@ public class TestNonograma{
 	Assert.assertTrue(n2.filaValida(0));
 	Assert.assertTrue(n2.filaValida(1));
 	Assert.assertTrue(n2.filaValida(2));
+    }
+
+    /**
+     * Prueba unitaria para {@link Nonograma#erroresFila}.
+     */
+    @Test public void testErroresFila(){
+	Assert.assertTrue(n.erroresFila(0) == 1);
+	Assert.assertTrue(n.erroresFila(1) == 1);
+	n.colorea(0, 0);
+	n.colorea(1, 1);
+	Assert.assertTrue(n.erroresFila(0) == 0);
+	Assert.assertTrue(n.erroresFila(1) == 0);
+	Assert.assertTrue(n2.erroresFila(0) == 2);
+	Assert.assertTrue(n2.erroresFila(1) == 2);
+	Assert.assertTrue(n2.erroresFila(2) == 0);
+	n2.colorea(0, 0);
+	n2.colorea(0, 2);
+	n2.colorea(1, 0);
+	n2.colorea(1, 1);
+	Assert.assertTrue(n2.erroresFila(0) == 0);
+	Assert.assertTrue(n2.erroresFila(1) == 0);
+	Assert.assertTrue(n2.erroresFila(2) == 0);
+    }
+
+    /**
+     * Prueba unitaria para {@link Nonograma#erroresFila}.
+     */
+    @Test public void testErroresColumna(){
+	Assert.assertTrue(n.erroresColumna(0) == 1);
+	Assert.assertTrue(n.erroresColumna(1) == 1);
+	n.colorea(0, 0);
+	n.colorea(1, 1);
+	Assert.assertTrue(n.erroresColumna(0) == 0);
+	Assert.assertTrue(n.erroresColumna(1) == 0);
+	Assert.assertTrue(n2.erroresColumna(0) == 2);
+	Assert.assertTrue(n2.erroresColumna(1) == 1);
+	Assert.assertTrue(n2.erroresColumna(2) == 1);
+	n2.colorea(0, 0);
+	n2.colorea(0, 2);
+	n2.colorea(1, 0);
+	n2.colorea(1, 1);
+	Assert.assertTrue(n2.erroresColumna(0) == 0);
+	Assert.assertTrue(n2.erroresColumna(1) == 0);
+	Assert.assertTrue(n2.erroresColumna(2) == 0);
     }
 
     /**
@@ -96,7 +140,5 @@ public class TestNonograma{
 	n2.colorea(1, 0);
 	n2.colorea(1, 1);
 	Assert.assertTrue(n2.solucionValida());
-	System.out.println(n);
-	System.out.println(n2);
     }
 }
