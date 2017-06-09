@@ -97,20 +97,20 @@ public class TestNonograma{
     }
 
     /**
-     * Prueba unitaria para {@link Nonograma#getAptitud}.
+     * Prueba unitaria para {@link Nonograma#calculaAptitud}.
      */
-    @Test public void testGetAptitud(){
+    @Test public void testCalculaAptitud(){
 	int[][] resF = {{1, 1}, {2}, {2}};
 	int[][] resC = {{2}, {2}, {1, 1}};
 	n = new Nonograma(3, 3, resF, resC);
 	n.colorea(0, 0);
 	n.colorea(1, 0);
 	n.colorea(1, 1);
-	n.colorea(2, 2);
-	Assert.assertTrue(n.getAptitud() == 1 - (4/9));
+	n.colorea(2, 2); 
+	Assert.assertTrue(n.calculaAptitud() == 1 - (4/9));
 	n.colorea(2, 1);
 	n.colorea(2, 0);
-	Assert.assertTrue(n.getAptitud() == 1);
+	Assert.assertTrue(n.calculaAptitud() == 1);
     }
 
     

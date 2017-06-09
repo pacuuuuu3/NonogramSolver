@@ -12,12 +12,13 @@ import java.util.Arrays;
  */
 public class Nonograma{
 
-    private final int filas, columnas; /* Número de filas y columnas */
-    private boolean[][] colores; /* Colores de la matriz */
-    private final int[][] restriccionesF, restriccionesC; /* Restricciones de filas y columnas */
-
+    public final int filas, columnas; /* Número de filas y columnas */
+    protected boolean[][] colores; /* Colores de la matriz */
+    public final int[][] restriccionesF, restriccionesC; /* Restricciones de filas y columnas */
+    public double aptitud; /* Aptitud del nonograma */
+    
     /**
-     * Constructor.
+     * Constructor de un nonograma sin colorear.
      * @param filas - Número de filas del nonograma
      * @param columnas - Número de columnas del nonograma
      * @param restriccionesF - Restricciones de filas
@@ -29,6 +30,24 @@ public class Nonograma{
 	this.restriccionesF = restriccionesF;
 	this.restriccionesC = restriccionesC;
 	this.colores = new boolean[filas][columnas];
+	this.aptitud = this.calculaAptitud();
+    }
+    
+    /**
+     * Constructor de un nonograma coloreado. 
+     * @param filas - Número de filas del nonograma
+     * @param columnas - Número de columnas del nonograma
+     * @param colores - Valores de color del nonograma
+     * @param restriccionesF - Restricciones de filas
+     * @param restriccionesC - Restricciones de columnas
+     */
+    public Nonograma(int filas, int columnas, boolean[][] colores, int[][] restriccionesF, int[][] restriccionesC){
+	this.filas = filas;
+	this.columnas = columnas;
+	this.colores = colores;
+	this.restriccionesF = restriccionesF;
+	this.restriccionesC = restriccionesC;
+	this.aptitud = this.calculaAptitud();
     }
 
     /** 
@@ -38,23 +57,23 @@ public class Nonograma{
     @Override
     public String toString(){
        	String regreso = ""; /* Cadena a regresar */
-	regreso += "Tamaño: " + filas + " * " + columnas + "\n";
-	regreso += "Restricciones de filas: \n";
-	for(int i = 0; i < restriccionesF.length; ++i){
-	    for(int j = 0; j < restriccionesF[i].length; ++j)
-		regreso += restriccionesF[i][j] + " ";
-	    regreso += "\n"; 
-	}	
-	regreso += "Restricciones de columnas: \n";
-	for(int i = 0; i < restriccionesC.length; ++i){
-	    for(int j = 0; j < restriccionesC[i].length; ++j)
-		regreso += restriccionesC[i][j] + " ";
-	    regreso += "\n"; 
-	}	
+	// regreso += "Tamaño: " + filas + " * " + columnas + "\n";
+	// regreso += "Restricciones de filas: \n";
+	// for(int i = 0; i < restriccionesF.length; ++i){
+	//     for(int j = 0; j < restriccionesF[i].length; ++j)
+	// 	regreso += restriccionesF[i][j] + " ";
+	//     regreso += "\n"; 
+	// }	
+	// regreso += "Restricciones de columnas: \n";
+	// for(int i = 0; i < restriccionesC.length; ++i){
+	//     for(int j = 0; j < restriccionesC[i].length; ++j)
+	// 	regreso += restriccionesC[i][j] + " ";
+	//     regreso += "\n"; 
+	// }	
 	for(int i = 0; i < colores.length; ++i){
 	    for(int j = 0; j < colores[i].length; ++j)
 		if(colores[i][j])
-		    regreso += "|#|";
+ 		    regreso += "|#|";
 		else
 		    regreso += "|_|";
 	    regreso += "\n";
@@ -162,14 +181,22 @@ public class Nonograma{
      * aptitud = 1-(errores/casillas)
      * @return La aptitud del nonograma para utilizar una heurística de resolución.
      */
-    public double getAptitud(){
+    public double calculaAptitud(){
 	int errores = 0; /* Número de errores en el nonograma */
 	for(int i = 0; i < filas; ++i)
 	    errores += erroresFila(i);
 	for(int j = 0; j < columnas; ++j)
 	    errores += erroresColumna(j);
-	return 1 - (errores/filas*columnas);
-    }    
+	return 1 - ((double)errores/(filas*columnas));
+    }
+
+    /**
+     * Getter de la aptitud.
+     * @return La aptitud.
+     */
+    public double getAptitud(){
+	return this.aptitud;
+    }
 
     /**
      * Nos dice si una fila es válida de acuerdo a sus restricciones.
@@ -196,5 +223,6 @@ public class Nonograma{
      */
     public void colorea(int fila, int columna){
 	this.colores[fila][columna] = !this.colores[fila][columna];
+	
     }
 }

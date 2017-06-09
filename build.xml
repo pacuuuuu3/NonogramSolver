@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="nonogram" default="nonogram.jar" basedir="." >
+<project name="nonograma" default="nonograma.jar" basedir="." >
 
   <property name="build.dir" value="build" />
   <property name="src.dir"   value="src" />
   <property name="lib.dir"   value="lib" />
   <property name="doc.dir"   value="doc" />
 
-  <target name="nonogram.jar" depends="compile.nonogram">
-    <jar jarfile="nonogram.jar">
+  <target name="nonograma.jar" depends="compile.nonograma">
+    <jar jarfile="nonograma.jar">
       <zipfileset dir="${build.dir}" prefix="" />
       <zipgroupfileset dir="lib" includes="*.jar"/>
       <manifest>
-        <attribute name="Main-Class" value="nonogram.Solver"/>
+        <attribute name="Main-Class" value="nonograma.GeneticoN"/>
       </manifest>
     </jar>
   </target>
 
-  <target name="compile.nonogram">
+  <target name="compile.nonograma">
     <mkdir dir="${build.dir}"/>
     <javac srcdir="${src.dir}"
            destdir="${build.dir}"
@@ -34,9 +34,9 @@
     </javac>
   </target>
 
-  <target name="doc" depends="nonogram.jar">
+  <target name="doc" depends="nonograma.jar">
     <mkdir dir="${doc.dir}"/>
-    <javadoc packagenames="nonogram.*"
+    <javadoc packagenames="nonograma.*"
              sourcepath="src"
              defaultexcludes="yes"
              destdir="${doc.dir}"
@@ -57,14 +57,14 @@
   </target>
 
   <target name="clean">
-    <delete file="nonogram.jar"/>
-    <delete file="/src/nonogram/*~"/>
-    <delete file="/src/nonogram/test/*~"/> 
+    <delete file="nonograma.jar"/>
+    <delete file="/src/nonograma/*~"/>
+    <delete file="/src/nonograma/test/*~"/> 
     <delete dir="${build.dir}"/>
     <delete dir="${doc.dir}"/>
   </target>
 
-  <target name="test" depends="nonogram.jar">
+  <target name="test" depends="nonograma.jar">
     <junit printsummary="yes" haltonfailure="no" showoutput="yes">
       <formatter type="plain" usefile="false" />
       <classpath>
