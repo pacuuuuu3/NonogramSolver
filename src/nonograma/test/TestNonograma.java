@@ -116,6 +116,21 @@ public class TestNonograma{
 	Assert.assertTrue(n2.erroresColumna(0) == 0);
 	Assert.assertTrue(n2.erroresColumna(1) == 0);
 	Assert.assertTrue(n2.erroresColumna(2) == 0);
+	int[][] filas = {{2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}};
+	int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
+	boolean[][] colores= {{false, false, true, true, false, false, false, false}, {false, false, false, true, false, false, false, false},
+		       {true, true, false, true, true, false, false, false}, {false, false, false, true, true, false, false, false},
+		       {false, false, false, false, true, true, true, false}, {false, false, false, false, true, true, true, true},
+		       {false, false, false, false, true, true, true, true}, {false, false, false, false, true, true, true, false}};
+	Nonograma n3 = new Nonograma(8, 8, colores, filas, columnas);
+	Assert.assertTrue(n3.erroresColumna(0) == 0);
+	Assert.assertTrue(n3.erroresColumna(1) == 2);
+	Assert.assertTrue(n3.erroresColumna(2) == 5);
+	Assert.assertTrue(n3.erroresColumna(3) == 0);
+	Assert.assertTrue(n3.erroresColumna(4) == 5);
+	Assert.assertTrue(n3.erroresColumna(5) == 1);
+	Assert.assertTrue(n3.erroresColumna(6) == 2);
+	Assert.assertTrue(n3.erroresColumna(7) == 1);
     }
 
     /**
@@ -128,11 +143,11 @@ public class TestNonograma{
 	n.colorea(0, 0);
 	n.colorea(1, 0);
 	n.colorea(1, 1);
-	n.colorea(2, 2); 
-	Assert.assertTrue(n.calculaAptitud() == 1 - (4/9));
+	n.colorea(2, 2);
+	Assert.assertTrue(n.calculaAptitud() == 1 - (4.0/9));
+	n.colorea(0, 2);
 	n.colorea(2, 1);
-	n.colorea(2, 0);
-	Assert.assertTrue(n.calculaAptitud() == 1);
+	Assert.assertTrue(n.calculaAptitud() == 1.0);
     }
 
     

@@ -165,10 +165,11 @@ public class Nonograma{
 	for(int j = restriccionesC[columna].length - 1; j > -(listaColumna.size()); --j){
 	    int distancia = 0; /* Distancia entre la solución recorrida j lugares
 				* y las restricciones. */
-	    for(int i = 0; i < listaColumna.size(); i++){
+	    for(int i = -restriccionesC[columna].length +1; i <= restriccionesC[columna].length; i++){
 		int indice = i+j; /* El índice de restricción a sacar */
-		int restriccion = (indice >= restriccionesC[columna].length || indice < 0) ? 0 : restriccionesC[columna][indice]; 
-		distancia += Math.abs(listaColumna.get(i)-restriccion);
+		int restriccion = (indice >= restriccionesC[columna].length || indice < 0) ? 0 : restriccionesC[columna][indice];
+		int valor = (i >= listaColumna.size() || i < 0) ? 0 : listaColumna.get(i); /* Valor coloreado */
+		distancia += Math.abs(valor-restriccion);
 	    }
 	    if(distancia < min)
 		min = distancia;
