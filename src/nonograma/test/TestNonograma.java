@@ -149,7 +149,7 @@ public class TestNonograma{
 	n.colorea(2, 1);
 	Assert.assertTrue(n.calculaAptitud() == 1.0);
     }
-
+ 
     
     /**
      * Prueba unitaria para {@link Nonograma#columnaValida}.

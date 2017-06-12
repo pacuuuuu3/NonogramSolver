@@ -7,8 +7,8 @@ import java.util.Random;
  * @author Víctor Zamora Gutiérrez
  * @version 1.0
  */
-public class GeneticoN{
-
+public class GeneticoN extends Thread{
+    
     private final long semilla;
     private final Random random; /* Generador de números aleatorios. */
     private final int individuos; /* Número de individuos */
@@ -161,33 +161,87 @@ public class GeneticoN{
     }
 
     /**
+     * Corre el genético en un hilo.
+     */
+    public void run(){
+	int generacion = 0; /* Generación actual */
+	while(true){
+	    Nonograma el = this.elite; /* Mejor nonograma encontrado hasta ahora */
+	    if(this.elite.getAptitud() == 1)
+		{
+		    System.out.printf("semilla: %d\n", semilla);
+		    System.out.printf("generación: %d\n", generacion);
+		    System.out.printf("aptitud: %f\n", this.elite.getAptitud());
+		    System.out.println(this.elite);
+		    System.exit(0);
+		}
+	    this.generacion();
+	    generacion++;
+	    if(this.elite.getAptitud() > el.getAptitud()){
+		el = this.elite;
+		System.out.printf("semilla: %d\n", semilla);
+		System.out.printf("generación: %d\n", generacion);
+		System.out.printf("aptitud: %f\n", this.elite.getAptitud());
+		System.out.println(this.elite);
+	    }
+	}
+    }
+
+    /**
      * Soluciona un Nonograma.
      */
     public static void main(String args[]){
+	int hilos = 0;
+	try{
+	    hilos = Integer.parseInt(args[0]);
+	}catch(Exception e){
+	    System.err.println("Uso del programa java -jar nonograma.jar <hilos>");
+	    System.exit(-1);
+	}
+	
+	//11x8 p
 	// int[][] filas = {{0}, {4}, {6}, {2, 2}, {2, 2}, {6}, {4}, {2}, {2}, {2}, {0}};
 	// int[][] columnas = {{0}, {9}, {9}, {2, 2}, {2, 2}, {4}, {4}, {0}};
+
+	//5x5
 	// int[][] filas = {{3}, {2}, {3, 1}, {1, 1}, {1, 2}};
 	// int[][] columnas = {{1, 1}, {3}, {5}, {1, 1}, {2}};
 
-	int[][] filas = {{2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}};
-	int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
-	GeneticoN s = new GeneticoN(69,69,.007, 8, 8,filas, columnas);
-	// System.out.println(s.poblacion[0]);
-	// System.out.println(s.poblacion[199]);
-	// System.out.println(s.reproduce(s.poblacion[0], s.poblacion[199]));
+	//8x8 ardilla
+	// int[][] filas = {{2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}};
+	// int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
 	
-	int generacion = 0;
-	while(true){
-	    System.out.printf("generación: %d\n", generacion++);
-	    System.out.println(s.elite);
-	    System.out.println(s.elite.getAptitud());
-	    if(s.elite.getAptitud() == 1)
-		{
-		    System.out.println(s.elite);
-		    break;
-		}
-	    s.generacion();
+	//16x16 dos ardillas
+	int[][] filas = {{2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}, {2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}};
+	int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}, {1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
+
+	
+	//10x10 llave
+	// int[][] filas = {{3}, {2, 2}, {6}, {3, 3}, {4, 1}, {7}, {3, 3}, {3}, {3}, {2}};
+	// int[][] columnas = {{2}, {3}, {3}, {3,3}, {7}, {1, 4}, {3, 3}, {6}, {2, 2}, {3}};
+	
+	//10x10 MUY DIFICIL Según artículo
+	// int[][] filas = {{1, 1, 2, 1}, {1, 1, 1}, {2}, {1, 2, 1, 1}, {1, 1, 2}, {1, 1, 1, 1}, {1, 1}, {2, 1, 1}, {1, 1, 2}, {1, 1, 1, 1, 1}};
+	// int[][] columnas = {{1, 1, 2, 1}, {2, 1, 1}, {1, 1, 1}, {1, 1, 2}, {1, 2}, {1, 1, 1, 1}, {2, 1, 1, 1}, {2, 2}, {1}, {1, 1, 1, 1, 1}};
+
+	
+	for(int i = 0; i <hilos;++i){
+	    GeneticoN s = new GeneticoN(i+696969, 50+100*i, .007+.005*i, 16, 16,filas, columnas);
+	    s.start();
 	}
+
+	// int generacion = 0;
+	// while(true){
+	//     System.out.printf("generación: %d\n", generacion++);
+	//     System.out.println(s.elite);
+	//     System.out.println(s.elite.getAptitud());
+	//     if(s.elite.getAptitud() == 1)
+	// 	{
+	// 	    System.out.println(s.elite);
+	// 	    break;
+	// 	}
+	//     s.generacion();
+	// }
     }
     
 }
