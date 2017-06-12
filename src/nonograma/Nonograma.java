@@ -121,13 +121,14 @@ public class Nonograma{
 	}
 	int min = Integer.MAX_VALUE; /* Mínima distancia entre nuestra solución 
 				      * y la solución esperada */
-	for(int j = restriccionesF[fila].length; j > -(listaFila.size()); --j){
+	for(int j = restriccionesF[fila].length -1 ; j > -(listaFila.size()); --j){
 	    int distancia = 0; /* Distancia entre la solución recorrida j lugares
 				* y las restricciones. */
-	    for(int i = 0; i < listaFila.size(); i++){
+	    for(int i = -restriccionesF[fila].length + 1; i <= restriccionesF[fila].length; i++){
 		int indice = i+j; /* El índice de restricción a sacar */
 		int restriccion = (indice >= restriccionesF[fila].length || indice < 0) ? 0 : restriccionesF[fila][indice]; 
-		distancia += Math.abs(listaFila.get(i)-restriccion);
+		int valor = (i >= listaFila.size() || i < 0) ? 0 : listaFila.get(i); /* Valor coloreado */
+		distancia += Math.abs(valor-restriccion);
 	    }
 	    if(distancia < min)
 		min = distancia;
@@ -161,7 +162,7 @@ public class Nonograma{
 	}
 	int min = Integer.MAX_VALUE; /* Mínima distancia entre nuestra solución 
 				      * y la solución esperada */
-	for(int j = restriccionesC[columna].length; j > -(listaColumna.size()); --j){
+	for(int j = restriccionesC[columna].length - 1; j > -(listaColumna.size()); --j){
 	    int distancia = 0; /* Distancia entre la solución recorrida j lugares
 				* y las restricciones. */
 	    for(int i = 0; i < listaColumna.size(); i++){

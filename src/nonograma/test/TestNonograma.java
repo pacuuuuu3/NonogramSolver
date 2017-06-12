@@ -18,7 +18,7 @@ public class TestNonograma{
     /** Expiración para que ninguna prueba tarde más de 5 segundos. */
     @Rule public Timeout expiracion = Timeout.seconds(5);
 
-    private Nonograma n, n2;
+    private Nonograma n, n2, n3;
 
     /**
      * Construímos un Nonograma */
@@ -27,7 +27,14 @@ public class TestNonograma{
       	n = new Nonograma(2, 2, resF, resF);
 	int[][] resF2 ={{1, 1}, {2}, {0}};
 	int[][] resC2 = {{2},{1},{1}};
-	n2 = new Nonograma(3, 3, resF2, resC2);
+	n2 = new Nonograma(3, 3, resF2, resC2);	
+	int[][] filas = {{2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}};
+	int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
+	boolean[][] colores= {{false, false, true, true, false, false, false, false}, {false, false, false, true, false, false, false, false},
+		       {true, true, false, true, true, false, false, false}, {false, false, false, true, true, false, false, false},
+		       {false, false, false, false, true, true, true, false}, {false, false, false, false, true, true, true, true},
+		       {false, false, false, false, true, true, true, true}, {false, false, false, false, true, true, true, false}};
+	Nonograma n3 = new Nonograma(8, 8, colores, filas, columnas);
     }
     
     /**
@@ -72,8 +79,23 @@ public class TestNonograma{
 	Assert.assertTrue(n2.erroresFila(0) == 0);
 	Assert.assertTrue(n2.erroresFila(1) == 0);
 	Assert.assertTrue(n2.erroresFila(2) == 0);
+	int[][] filas = {{2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}};
+	int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
+	boolean[][] colores= {{false, false, true, true, false, false, false, false}, {false, false, false, true, false, false, false, false},
+		       {true, true, false, true, true, false, false, false}, {false, false, false, true, true, false, false, false},
+		       {false, false, false, false, true, true, true, false}, {false, false, false, false, true, true, true, true},
+		       {false, false, false, false, true, true, true, true}, {false, false, false, false, true, true, true, false}};
+	Nonograma n3 = new Nonograma(8, 8, colores, filas, columnas);
+	Assert.assertTrue(n3.erroresFila(0) == 0);
+	Assert.assertTrue(n3.erroresFila(1) == 4);
+	Assert.assertTrue(n3.erroresFila(2) == 0);
+	Assert.assertTrue(n3.erroresFila(3) == 3);
+	Assert.assertTrue(n3.erroresFila(4) == 3);
+	Assert.assertTrue(n3.erroresFila(5) == 2);
+	Assert.assertTrue(n3.erroresFila(6) == 0);
+	Assert.assertTrue(n3.erroresFila(7) == 0);
     }
-
+    
     /**
      * Prueba unitaria para {@link Nonograma#erroresColumna}.
      */

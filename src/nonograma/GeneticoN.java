@@ -164,12 +164,14 @@ public class GeneticoN{
      * Soluciona un Nonograma.
      */
     public static void main(String args[]){
-	int[][] filas = {{0}, {4}, {6}, {2, 2}, {2, 2}, {6}, {4}, {2}, {2}, {2}, {0}};
-	int[][] columnas = {{0}, {9}, {9}, {2, 2}, {2, 2}, {4}, {4}, {0}};
+	// int[][] filas = {{0}, {4}, {6}, {2, 2}, {2, 2}, {6}, {4}, {2}, {2}, {2}, {0}};
+	// int[][] columnas = {{0}, {9}, {9}, {2, 2}, {2, 2}, {4}, {4}, {0}};
 	// int[][] filas = {{3}, {2}, {3, 1}, {1, 1}, {1, 2}};
 	// int[][] columnas = {{1, 1}, {3}, {5}, {1, 1}, {2}};
 
-	GeneticoN s = new GeneticoN(69,69,.007, 11, 8,filas, columnas);
+	int[][] filas = {{2}, {1, 4}, {2, 2}, {3, 2}, {2, 2}, {4, 2}, {4}, {3}};
+	int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
+	GeneticoN s = new GeneticoN(69,69,.007, 8, 8,filas, columnas);
 	// System.out.println(s.poblacion[0]);
 	// System.out.println(s.poblacion[199]);
 	// System.out.println(s.reproduce(s.poblacion[0], s.poblacion[199]));
