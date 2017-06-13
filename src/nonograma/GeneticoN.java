@@ -224,7 +224,7 @@ public class GeneticoN extends Thread{
 
 	
 	for(int i = 0; i <hilos;++i){
-	    GeneticoN s = new GeneticoN(1994+i, 10+r.nextInt(990), r.nextDouble()*0.01, 10, 10, filas, columnas);
+	    GeneticoN s = new GeneticoN(1994+i, 10+r.nextInt(990), r.nextDouble()*0.01, 16, 16, filas, columnas);
 	    s.start();
 	}
 
