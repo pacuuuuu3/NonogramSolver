@@ -8,7 +8,7 @@ import java.util.Random;
  * @version 1.0
  */
 public class GeneticoN extends Thread{
-    
+
     private final long semilla;
     private final Random random; /* Generador de números aleatorios. */
     private final int individuos; /* Número de individuos */
@@ -17,7 +17,7 @@ public class GeneticoN extends Thread{
     private final int[][] restriccionesF, restriccionesC; /* Restricciones de filas y columnas */
     private Nonograma[] poblacion; /* Población de Nonogramas */
     private double sumaAptitudes; /* Suma de las aptitudes */
-    private Nonograma elite; /* Solo voy a mantener uno de élite */
+    public Nonograma elite; /* Solo voy a mantener uno de élite */
     
     /**
      * Constructor.
@@ -104,13 +104,6 @@ public class GeneticoN extends Thread{
 
 		}
 	}
-	// double rand = random.nextDouble(); /* Número aleatorio */
-	// if(rand <= probamutacion){
-	//     /* Mutamos */
-	//     int fila = random.nextInt(filas); /* Fila a mutar. */
-	//     int columna = random.nextInt(columnas); /* Columna a mutar */
-	//     nuevosColores[fila][columna] = !nuevosColores[fila][columna];
-	// }
 	return new Nonograma(filas, columnas, nuevosColores, restriccionesF, restriccionesC);
     }
 
@@ -177,12 +170,14 @@ public class GeneticoN extends Thread{
 		}
 	    this.generacion();
 	    generacion++;
-	    if(this.elite.getAptitud() > el.getAptitud()){
-		el = this.elite;
-		System.out.printf("semilla: %d\n", semilla);
-		System.out.printf("generación: %d\n", generacion);
-		System.out.printf("aptitud: %f\n", this.elite.getAptitud());
-		System.out.println(this.elite);
+	    synchronized(Mejor.mejor){
+	    	if(this.elite.getAptitud() > Mejor.mejor){
+		    Mejor.mejor = this.elite.getAptitud();
+		    System.out.printf("semilla: %d\n", this.semilla);
+		    System.out.printf("generación: %d\n", generacion);
+		    System.out.printf("aptitud: %f\n", this.elite.getAptitud());
+		    System.out.println(this.elite);
+		}
 	    }
 	}
     }
@@ -198,6 +193,9 @@ public class GeneticoN extends Thread{
 	    System.err.println("Uso del programa java -jar nonograma.jar <hilos>");
 	    System.exit(-1);
 	}
+
+	long seed = 1994; /* Semilla para otro generador de números aleatorios */
+	Random r = new Random(seed); /* Generador de números aleatorios */
 	
 	//11x8 p
 	// int[][] filas = {{0}, {4}, {6}, {2, 2}, {2, 2}, {6}, {4}, {2}, {2}, {2}, {0}};
@@ -216,7 +214,7 @@ public class GeneticoN extends Thread{
 	int[][] columnas = {{1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}, {1}, {2, 1}, {5, 1}, {4}, {2, 3}, {4, 1}, {2, 4}, {1, 2}};
 
 	
-	//10x10 llave
+ 	//10x10 llave
 	// int[][] filas = {{3}, {2, 2}, {6}, {3, 3}, {4, 1}, {7}, {3, 3}, {3}, {3}, {2}};
 	// int[][] columnas = {{2}, {3}, {3}, {3,3}, {7}, {1, 4}, {3, 3}, {6}, {2, 2}, {3}};
 	
@@ -226,7 +224,7 @@ public class GeneticoN extends Thread{
 
 	
 	for(int i = 0; i <hilos;++i){
-	    GeneticoN s = new GeneticoN(i+696969, 50+100*i, .007+.005*i, 16, 16,filas, columnas);
+	    GeneticoN s = new GeneticoN(1994+i, 10+r.nextInt(990), r.nextDouble()*0.01, 10, 10, filas, columnas);
 	    s.start();
 	}
 
