@@ -1,0 +1,121 @@
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage{amssymb,amsmath}
+\usepackage{mathrsfs}
+\usepackage{epsfig}
+\usepackage{anysize}
+\usepackage{verbatim}
+\usepackage{dirtytalk}  
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{fancyvrb}
+%\input{macrosal}
+\title{Solucionador de Nonogramas utilizando algoritmos genéticos}
+\author{Víctor Zamora Gutiérrez}
+\date{}
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\section{Introducción}
+Los nonogramas son rompecabezas en los que se tiene una cuadrícula rectangular en la que cada cuadro tiene un color de dos disponibles: blanco y negro. Las reglas son sencillas: se empieza con un tablero completamente blanco. Cada fila y cada columna tienen una lista de números llamada \say{restricciones} que nos dicen cómo debe ser llenada esa fila o columna. El objetivo del juego es llenar el tablero de manera que las restricciones de las filas y columnas se cumplan.
+
+Las restricciones nos dictan \say{segmentos} que deben ser llenados de la fila o columna. Por ejemplo, si tenemos la restricción $<2>$, entonces deben haber dos cuadros negros consecutivos en cualquier parte de esa fila o columna. Si en cambio, tenemos la lista de restricciones $<2, 3, 5>$, entonces debemos tener un segmeno de dos cuadros negros seguido de un segmento de 3 cuadros negros seguido de un segmento de 5 cuadros negros. Los segmentos negros deben estar separados por segmentos blancos (de tamaño arbitrario). Por ejemplo, en una fila de tamaño 4 con restricciones $<1, 1>$, las siguientes soluciones son válidas:
+\begin{center}
+\begin{BVerbatim}    
+  |#|_|#|_|
+  |#|_|_|#|
+  |_|#|#|_|
+  |_|#|_|#|
+  |_|_|#|#|
+\end{BVerbatim}
+\end{center}
+
+Estas son además, las \textbf{únicas} soluciones válidas.
+
+Aunque algunos de estos rompecabezas pueden resolverse de manera sencilla por métodos deterministas, en general, resolver un nonograma es un problema NP-Completo \cite{ueda1996np}. En este trabajo, vamos a intentar resolver nonogramas utilizando algoritmos genéticos.
+
+\section{Algoritmos genéticos}
+Los algoritmos genéticos están basados en la selección natural. Empezamos con una población de un tamaño definido por nosotros. En cada iteración del agloritmo, \say{reproducimos} a los individuos \say{más aptos} de dicha generación, generando así instancias hijas con probabilidad alta de ser aptas, incluso pudiendo superar a sus padres. La idea del algoritmo es mejorar poco a poco la calidad de la población hasta llegar a instancias \say{cercanas} a la solución óptima.
+
+
+
+\section{Para correr el programa}
+Para correr el programa, se necesita una distribución de Linux con java 8, ant y sqlite3.
+Para instalar dichos programas desde ArchLinux, ejecutar:
+\begin{verbatim}
+$sudo pacman -S jre8-openjdk
+$sudo pacman -S jdk8-openjdk
+$sudo pacman -S apache-ant
+$sudo pacman -S sqlite
+\end{verbatim}
+Teniendo esto, desde la carpeta raíz del proyecto (la que tiene el build.xml) ejecutar:
+\begin{verbatim}
+$ant tsp.jar
+$java -jar tsp.jar <semilla> <ciudades>
+\end{verbatim}
+Donde semilla es la semilla con la que se quiere correr el recocido y ciudades es un archivo que contiene una lista de ids de ciudades, separadas por una coma y un espacio.
+Por ejemplo, \textit{ciudades} puede tener la siguiente línea:
+\begin{center}
+1, 5, 9, 12, 16, 22, 23, 29, 30, 31, 39, 48, 52, 56, 58, 62, 65, 66, 70, 75, 80, 84, 86, 90, 92, 94, 95, 101, 107, 117, 119, 122, 133, 135, 143, 144, 146, 147, 150, 158, 159, 160, 166, 167, 176, 178, 179, 185, 186, 188, 190, 191, 194, 198, 200, 203, 207, 209, 213, 215, 216, 220, 221, 224, 227, 232, 233, 235, 238, 241, 244, 248, 250, 254, 264, 266, 274, 276
+\end{center}
+
+Alternativamente, en la carpeta raíz se encuentra el jar, por lo que teniendo java puede correrse el programa sin pasar por la compilación.
+\bigskip
+
+Para correr las pruebas unitarias, utilizar:
+\begin{verbatim}
+$ant test
+\end{verbatim}
+También desde la carpeta raíz.
+\bigskip
+
+Y para generar la documentación de \textit{javadoc}:
+\begin{verbatim}
+$ant doc
+\end{verbatim}
+Ésta se generará en la carpeta \textit{doc} del directorio raíz.
+\bigskip
+
+Por último, para borrar el .jar, la documentación y los archivos compilados:
+\begin{verbatim}
+$ant clean
+\end{verbatim}
+\section{Parámetros utilizados}
+Para el programa, utilicé los siguientes parámetros:
+\smallskip
+
+$\epsilon = 0.0001$
+\smallskip
+
+$\epsilon_{p} = 0.0001$
+\smallskip
+
+$\varphi = 0.9 $
+\smallskip
+
+$C = 2 $
+
+Para más información sobre los parámetros, leer sobre la heurística en los documentos de Canek Pelaez Valdés.
+\section{Gráfica de soluciones}
+La siguiente gráfica muestra los costos de las soluciones aceptadas respecto al tiempo con el conjunto de entrada
+\begin{center}
+1, 5, 9, 12, 16, 22, 23, 29, 30, 31, 39, 48, 52, 56, 58, 62, 65, 66, 70, 75, 80, 84, 86, 90, 92, 94, 95, 101, 107, 117, 119, 122, 133, 135, 143, 144, 146, 147, 150, 158, 159, 160, 166, 167, 176, 178, 179, 185, 186, 188, 190, 191, 194, 198, 200, 203, 207, 209, 213, 215, 216, 220, 221, 224, 227, 232, 233, 235, 238, 241, 244, 248, 250, 254, 264, 266, 274, 276
+\end{center}
+\begin{verbatim}
+E: <costo>
+\end{verbatim}
+
+\section{Conclusiones}
+\begin{itemize}
+\item Aunque la heurísitica no es difícil de programar en sí, pueden ocurrir varios errores durante el proceso, así que hay que hacerlo con cuidado.
+\item Me falta hacer más experimentación sobre los parámetros.
+\item El proyecto fue muy divertido.
+\end{itemize}
+
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{nonograma}
+\end{document}
+ 
+ 
