@@ -165,6 +165,8 @@ public class GeneticoN extends Thread{
 		    System.out.printf("semilla: %d\n", semilla);
 		    System.out.printf("generación: %d\n", generacion);
 		    System.out.printf("aptitud: %f\n", this.elite.getAptitud());
+		    System.out.printf("probabilidad de mutación: %f\n", this.probamutacion);
+		    System.out.printf("población: %d\n", this.individuos);
 		    System.out.println(this.elite);
 		    System.exit(0);
 		}
@@ -176,6 +178,9 @@ public class GeneticoN extends Thread{
 		    System.out.printf("semilla: %d\n", this.semilla);
 		    System.out.printf("generación: %d\n", generacion);
 		    System.out.printf("aptitud: %f\n", this.elite.getAptitud());
+		    System.out.printf("probabilidad de mutación: %f\n", this.probamutacion);
+		    System.out.printf("población: %d\n", this.individuos);
+		    System.out.println();
 		    System.out.println(this.elite);
 		}
 	    }
@@ -194,7 +199,7 @@ public class GeneticoN extends Thread{
 	    System.exit(-1);
 	}
 
-	long seed = 1994; /* Semilla para otro generador de números aleatorios */
+	long seed = -10; /* Semilla para otro generador de números aleatorios */
 	Random r = new Random(seed); /* Generador de números aleatorios */
 	
 	//11x8 p
@@ -224,7 +229,7 @@ public class GeneticoN extends Thread{
 
 	
 	for(int i = 0; i <hilos;++i){
-	    GeneticoN s = new GeneticoN(1994+i, 10+r.nextInt(990), r.nextDouble()*0.01, 16, 16, filas, columnas);
+	    GeneticoN s = new GeneticoN(5+i,  10+r.nextInt(990), r.nextDouble()*0.01, 16, 16, filas, columnas);
 	    s.start();
 	}
 
