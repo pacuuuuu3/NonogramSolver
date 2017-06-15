@@ -199,7 +199,7 @@ public class GeneticoN extends Thread{
 	    System.exit(-1);
 	}
 
-	long seed = -10; /* Semilla para otro generador de números aleatorios */
+	long seed = -16; /* Semilla para otro generador de números aleatorios */
 	Random r = new Random(seed); /* Generador de números aleatorios */
 	
 	//11x8 p
@@ -229,22 +229,9 @@ public class GeneticoN extends Thread{
 
 	
 	for(int i = 0; i <hilos;++i){
-	    GeneticoN s = new GeneticoN(5+i,  10+r.nextInt(990), r.nextDouble()*0.01, 16, 16, filas, columnas);
+	    GeneticoN s = new GeneticoN(8+i,  10+r.nextInt(990), r.nextDouble()*0.01, 16, 16, filas, columnas);
 	    s.start();
 	}
-
-	// int generacion = 0;
-	// while(true){
-	//     System.out.printf("generación: %d\n", generacion++);
-	//     System.out.println(s.elite);
-	//     System.out.println(s.elite.getAptitud());
-	//     if(s.elite.getAptitud() == 1)
-	// 	{
-	// 	    System.out.println(s.elite);
-	// 	    break;
-	// 	}
-	//     s.generacion();
-	// }
     }
     
 }
