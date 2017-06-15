@@ -35,82 +35,50 @@ Estas son además, las \textbf{únicas} soluciones válidas.
 Aunque algunos de estos rompecabezas pueden resolverse de manera sencilla por métodos deterministas, en general, resolver un nonograma es un problema NP-Completo \cite{ueda1996np}. En este trabajo, vamos a intentar resolver nonogramas utilizando algoritmos genéticos.
 
 \section{Algoritmos genéticos}
-Los algoritmos genéticos están basados en la selección natural. Empezamos con una población de un tamaño definido por nosotros. En cada iteración del agloritmo, \say{reproducimos} a los individuos \say{más aptos} de dicha generación, generando así instancias hijas con probabilidad alta de ser aptas, incluso pudiendo superar a sus padres. La idea del algoritmo es mejorar poco a poco la calidad de la población hasta llegar a instancias \say{cercanas} a la solución óptima.
+Los algoritmos genéticos están basados en la selección natural. Empezamos con una población de instancias de solución aleatorias. En cada iteración del algoritmo, \say{reproducimos} a los individuos \say{más aptos} de dicha generación, generando así instancias hijas con probabilidad alta de ser aptas, incluso pudiendo superar a sus padres. La idea del algoritmo es mejorar poco a poco la calidad de la población hasta llegar a instancias \say{cercanas} a la solución óptima.
 
+Para que el algoritmo no se quede atorado cerca de algún mínimo local, es decir que de verdad pueda encontrar la solución óptima, tenemos un factor de mutación que se aplica cada vez que nace un hijo. El factor de mutación, con cierta probabilidad, altera aleatoriamente una porción de una instancia. En general, la mutación nos lleva a resultados peores, pero esto no es necesariamente malo.
 
+La población que pasa de una generación a otra no está compuesta solamente por individuos \say{nuevos}. En cada generación, pasan automáticamente la mejor instancia vista (para que nuestras soluciones no puedan empeorar con el tiempo) y una instancia \textit{alien} o aleatoria.
 
-\section{Para correr el programa}
-Para correr el programa, se necesita una distribución de Linux con java 8, ant y sqlite3.
-Para instalar dichos programas desde ArchLinux, ejecutar:
-\begin{verbatim}
-$sudo pacman -S jre8-openjdk
-$sudo pacman -S jdk8-openjdk
-$sudo pacman -S apache-ant
-$sudo pacman -S sqlite
-\end{verbatim}
-Teniendo esto, desde la carpeta raíz del proyecto (la que tiene el build.xml) ejecutar:
-\begin{verbatim}
-$ant tsp.jar
-$java -jar tsp.jar <semilla> <ciudades>
-\end{verbatim}
-Donde semilla es la semilla con la que se quiere correr el recocido y ciudades es un archivo que contiene una lista de ids de ciudades, separadas por una coma y un espacio.
-Por ejemplo, \textit{ciudades} puede tener la siguiente línea:
+En el caso de los nonogramas, el algoritmo genético es bastante sencillo. Como tenemos matrices rectangulares, la reproducción de dos nonogramas consiste simplemente en combinar la mitad de una matriz con la mitad de la otra. La mutación consiste en cambiar un número arbitrario de valores de la matriz (si el valor es blanco se cambia a negro y viceversa).
+
+\subsection{Función de aptitud}
+En general, la función de aptitud es una parte complicada de los algoritos genéticos. Determinar qué tan cerca está de la solución una de nuestras instancias normalmente es tan difícil como resolver el problema mismo (y si pudiéramos hacer esto en tiempo polinomial, no habría necesidad de utilizar algoritmos genéticos desde un principio).
+
+Para la función de aptitud, consideraremos que vale 1 en una solución perfecta y que vale 0 si la instancia está al mayor número de pasos de distancia posible de la solución óptima. Dado que nuestro problema es NP-Completo, calcular la distancia entre una solución y la óptima es en sí un problema NP-Completo, por lo que hay que utilizar heurísticas para calcular la aptitud de un individuo.
+
+En el caso de este problema en particular, consideramos la distancia de nuestro nonograma al óptimo como el máximo número de errores. Este número tampoco es calculable en tiempo polinomial. Sin embargo, podemos hacer una estimación como sigue:
+
+Para cada fila o columna, sacamos su \textit{lista de colores}. La \textbf{lista de colores} de una fila o columna está definida como la lista que representa los segmentos negros de esa fila o columna. Es decir, si una fila de tamaño 5 está toda de negro, su lista de colores es $<5>$. Si tiene un cuadro negro seguido de dos blancos seguidos de dos negros, su lista de colores es $<1, 2>$. Esto se muestra a continuación:
+
+\textbf{Listas de colores para una fila de tamaño 5}:
 \begin{center}
-1, 5, 9, 12, 16, 22, 23, 29, 30, 31, 39, 48, 52, 56, 58, 62, 65, 66, 70, 75, 80, 84, 86, 90, 92, 94, 95, 101, 107, 117, 119, 122, 133, 135, 143, 144, 146, 147, 150, 158, 159, 160, 166, 167, 176, 178, 179, 185, 186, 188, 190, 191, 194, 198, 200, 203, 207, 209, 213, 215, 216, 220, 221, 224, 227, 232, 233, 235, 238, 241, 244, 248, 250, 254, 264, 266, 274, 276
+\begin{BVerbatim}    
+  |#|_|#|_|#|   Lista: <1, 1, 1>
+  |#|#|#|#|#|   Lista: <5>
+  |#|_|_|#|#|   Lista: <1, 2>
+  |_|#|_|#|#|   Lista: <1, 2>
+\end{BVerbatim}
 \end{center}
 
-Alternativamente, en la carpeta raíz se encuentra el jar, por lo que teniendo java puede correrse el programa sin pasar por la compilación.
-\bigskip
+Nótese que dos configuraciones distintas de una fila o columna pueden tener la misma lista de colores.
 
-Para correr las pruebas unitarias, utilizar:
-\begin{verbatim}
-$ant test
-\end{verbatim}
-También desde la carpeta raíz.
-\bigskip
+Una vez teniendo la lista de colores, se saca la distancia entre esta y la lista de restricciones. Para esto, el algoritmo consiste en obtener el número de pasos que toma llegar de la primera a la segunda, donde un paso es restarle a un número o sumarle a un número. Este algoritmo toma tiempo cuadrático en una implementación ingenua: básicamente contamos el número de pasos que toma transformar el último elemento de la lista de colores al primero de la lista de restricciones (y sus adyacentes a sus correspodientes), el último al segundo, etc.
 
-Y para generar la documentación de \textit{javadoc}:
-\begin{verbatim}
-$ant doc
-\end{verbatim}
-Ésta se generará en la carpeta \textit{doc} del directorio raíz.
-\bigskip
+\section{Resultados}
+Con mi implementación en \texttt{Java}, logré resolver nonogramas de tamaños variables, con el más grande resuelto siendo uno de 10x10 en cuestión de unos cuantos segundos. Dado que el tamaño de las soluciones crece de manera exponencial, habrá que hacer unas cuantas modificaciones al proyecto para solucionar nonogramas más grandes.
 
-Por último, para borrar el .jar, la documentación y los archivos compilados:
-\begin{verbatim}
-$ant clean
-\end{verbatim}
-\section{Parámetros utilizados}
-Para el programa, utilicé los siguientes parámetros:
-\smallskip
+Mi meta a futuro es resolver Nonogramas de tamaño 30x30. 
 
-$\epsilon = 0.0001$
-\smallskip
+\section{Uso del programa}
+Para compilar: \texttt{ant}
 
-$\epsilon_{p} = 0.0001$
-\smallskip
+Para obtener la documentación: \texttt{ant doc}
 
-$\varphi = 0.9 $
-\smallskip
+Para correr las pruebas unitarias: \texttt{ant test}
 
-$C = 2 $
-
-Para más información sobre los parámetros, leer sobre la heurística en los documentos de Canek Pelaez Valdés.
-\section{Gráfica de soluciones}
-La siguiente gráfica muestra los costos de las soluciones aceptadas respecto al tiempo con el conjunto de entrada
-\begin{center}
-1, 5, 9, 12, 16, 22, 23, 29, 30, 31, 39, 48, 52, 56, 58, 62, 65, 66, 70, 75, 80, 84, 86, 90, 92, 94, 95, 101, 107, 117, 119, 122, 133, 135, 143, 144, 146, 147, 150, 158, 159, 160, 166, 167, 176, 178, 179, 185, 186, 188, 190, 191, 194, 198, 200, 203, 207, 209, 213, 215, 216, 220, 221, 224, 227, 232, 233, 235, 238, 241, 244, 248, 250, 254, 264, 266, 274, 276
-\end{center}
-\begin{verbatim}
-E: <costo>
-\end{verbatim}
-
-\section{Conclusiones}
-\begin{itemize}
-\item Aunque la heurísitica no es difícil de programar en sí, pueden ocurrir varios errores durante el proceso, así que hay que hacerlo con cuidado.
-\item Me falta hacer más experimentación sobre los parámetros.
-\item El proyecto fue muy divertido.
-\end{itemize}
+Para correr el programa (una vez compilado): \texttt{java -jar nonograma.jar}
 
 
 \nocite{*}
